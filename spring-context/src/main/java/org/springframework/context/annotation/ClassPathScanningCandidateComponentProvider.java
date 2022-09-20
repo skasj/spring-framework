@@ -73,6 +73,10 @@ import org.springframework.util.ClassUtils;
  * {@link org.springframework.core.type.classreading.MetadataReader MetadataReader}
  * facility, backed by an ASM {@link org.springframework.asm.ClassReader ClassReader}.
  *
+ * 从基本包中提供候选组件的组件提供程序。如果可以扫描类路径，则可以使用索引。候选组件通过应用排除和包含筛选器来标识。
+ * 支持在注释/超类上使用Indexed注释的AnnotationTypeFilter、AssignableTypeFilters包含筛选器：如果指定了任何其他包含筛选器，则忽略索引，而使用类路径扫描。
+ * 此实现基于Spring的MetadataReader工具，由ASM ClassReader支持。
+ *
  * @author Mark Fisher
  * @author Juergen Hoeller
  * @author Ramnivas Laddad

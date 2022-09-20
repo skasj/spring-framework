@@ -62,17 +62,22 @@ import org.springframework.util.PatternMatchUtils;
  */
 public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateComponentProvider {
 
+	/** BeanDefinition 注册中心 DefaultListableBeanFactory */
 	private final BeanDefinitionRegistry registry;
 
+	/** BeanDefinition 的默认配置 */
 	private BeanDefinitionDefaults beanDefinitionDefaults = new BeanDefinitionDefaults();
 
 	@Nullable
 	private String[] autowireCandidatePatterns;
 
+	/** Bean 的名称生成器 */
 	private BeanNameGenerator beanNameGenerator = AnnotationBeanNameGenerator.INSTANCE;
 
+	/** 作用域解析器 */
 	private ScopeMetadataResolver scopeMetadataResolver = new AnnotationScopeMetadataResolver();
 
+	/** 是否注册几个关于注解的 PostProcessor 处理器 */
 	private boolean includeAnnotationConfig = true;
 
 

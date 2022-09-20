@@ -38,6 +38,16 @@ import org.springframework.util.ObjectUtils;
  * {@link GenericBeanDefinition#setParentName} method. This effectively
  * supersedes the ChildBeanDefinition class for most use cases.
  *
+ *
+ * 从其父级继承设置的Bean的Bean定义。子bean定义对父bean定义有固定的依赖关系。
+ * 子bean定义将继承父bean的构造函数参数值、属性值和方法重写，并可以选择添加新值。
+ * 如果指定了init方法、destroy方法和/或静态工厂方法，它们将覆盖相应的父设置。
+ * 其余的设置将始终取自子定义：依赖、自动连接模式、依赖项检查、单例、延迟初始化。
+ *
+ * 注意：自Spring 2.5以来，以编程方式注册bean定义的首选方法是GenericBeanDefinition类，
+ * 它允许通过GenericBean定义动态定义父依赖项。setParentName方法。这在大多数用例中有效地
+ * 取代了ChildBeanDefinition类
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see GenericBeanDefinition

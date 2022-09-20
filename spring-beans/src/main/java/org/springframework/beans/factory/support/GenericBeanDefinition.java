@@ -31,6 +31,11 @@ import org.springframework.util.ObjectUtils;
  * potentially even reconfiguring the parent name). Use {@code RootBeanDefinition} /
  * {@code ChildBeanDefinition} where parent/child relationships happen to be pre-determined.
  *
+ * GenericBeanDefinition是用于标准bean定义的一站式服务。与任何bean定义一样，它允许指定一个类以及可选的构造
+ * 函数参数值和属性值。此外，可以通过“parentName”属性灵活地配置从父bean定义派生的。 一般来说，使用这个
+ * GenericBeanDefinition类是为了注册用户可见的bean定义（后处理器可能对其进行操作，甚至可能重新配置父名称）。
+ * 如果父/子关系恰好是预先确定的，则使用RootBeanDefinition/ChildBeanDefection。
+ *
  * @author Juergen Hoeller
  * @since 2.5
  * @see #setParentName

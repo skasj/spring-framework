@@ -48,6 +48,9 @@ public interface AnnotatedTypeMetadata {
 	/**
 	 * Return annotation details based on the direct annotations of the
 	 * underlying element.
+	 *
+	 * 基于基础元素的直接注释返回注释详细信息
+	 *
 	 * @return merged annotations based on the direct annotations
 	 * @since 5.2
 	 */

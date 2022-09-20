@@ -446,6 +446,12 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 * obtaining a new instance (typically declared as a lambda expression or
 	 * method reference), optionally customizing its bean definition metadata
 	 * (again typically declared as a lambda expression).
+	 *
+	 *
+	 * 从给定的bean类注册bean，使用给定的供应商获取新实例（通常声明为lambda表达式或方法引用），
+	 * 可选地定制其bean定义元数据（同样通常声明为lambda表达式）。
+	 * 可以重写此方法以适应所有registerBean方法的注册机制（因为它们都委托给此方法）。
+	 *
 	 * <p>This method can be overridden to adapt the registration mechanism for
 	 * all {@code registerBean} methods (since they all delegate to this one).
 	 * @param beanName the name of the bean (may be {@code null})

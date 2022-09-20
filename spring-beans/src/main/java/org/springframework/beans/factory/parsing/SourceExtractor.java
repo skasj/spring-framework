@@ -28,6 +28,10 @@ import org.springframework.lang.Nullable;
  * generic format which can be further modified by a {@link SourceExtractor}
  * before being attached to the bean definition metadata.
  *
+ * 允许工具控制源元数据如何附加到bean定义元数据的简单策略。
+ * 配置解析器可以提供在解析阶段期间附加源元数据的能力。它们将以通用格式提供此元数据，
+ * 可以在附加到bean定义元数据之前由SourceExtractor进一步修改。
+ *
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @since 2.0
@@ -40,9 +44,9 @@ public interface SourceExtractor {
 	/**
 	 * Extract the source metadata from the candidate object supplied
 	 * by the configuration parser.
-	 * @param sourceCandidate the original source metadata (never {@code null})
+	 * @param sourceCandidate the original source metadata (never {@code null}) - 原始源元数据
 	 * @param definingResource the resource that defines the given source object
-	 * (may be {@code null})
+	 * (may be {@code null}) – 定义给定源对象的资源（可能为空）
 	 * @return the source metadata object to store (may be {@code null})
 	 */
 	@Nullable

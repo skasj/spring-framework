@@ -90,6 +90,8 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 			this.resourceLoader = (ResourceLoader) this.registry;
 		}
 		else {
+			// 使用DefaultResourceLoader创建新的PathMatchingResourcePatternResolver。
+			// 类装入器访问将通过线程上下文类装入器进行。
 			this.resourceLoader = new PathMatchingResourcePatternResolver();
 		}
 
@@ -220,9 +222,12 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			// Resource pattern matching available.
 			try {
+				// 获得 Resource 数组，因为 Pattern 模式匹配下，可能有多个 Resource 。例如说，Ant 风格的 location
 				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
+				// 加载 BeanDefinition 们
 				int count = loadBeanDefinitions(resources);
 				if (actualResources != null) {
+					// 添加到 actualResources 中
 					Collections.addAll(actualResources, resources);
 				}
 				if (logger.isTraceEnabled()) {

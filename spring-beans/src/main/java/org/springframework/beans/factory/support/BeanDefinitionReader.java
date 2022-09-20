@@ -43,6 +43,8 @@ public interface BeanDefinitionReader {
 	 * Return the bean factory to register the bean definitions with.
 	 * <p>The factory is exposed through the BeanDefinitionRegistry interface,
 	 * encapsulating the methods that are relevant for bean definition handling.
+	 *
+	 * 返回要注册bean定义的bean工厂。 工厂通过BeanDefinitionRegistry接口公开，封装了与bean定义处理相关的方法。
 	 */
 	BeanDefinitionRegistry getRegistry();
 
@@ -60,6 +62,14 @@ public interface BeanDefinitionReader {
 	 * <p>There is also a {@code loadBeanDefinitions(String)} method available,
 	 * for loading bean definitions from a resource location (or location pattern).
 	 * This is a convenience to avoid explicit ResourceLoader handling.
+	 *
+	 * 返回用于资源位置的资源加载器。可以检查ResourcePatternResolver接口并相应地强制转换，以便
+	 * 为给定的资源模式加载多个资源。 空返回值表示绝对资源加载不可用于此bean定义读取器。 这主要用
+	 * 于从bean定义资源中导入更多资源，例如通过XMLbean定义中的“import”标记。但是，建议相对于定义
+	 * 资源应用此类导入；只有显式的完整资源位置才会触发绝对资源加载。
+	 * 还有一个loadBeanDefinitions（String）方法可用于从资源位置（或位置模式）加载bean定义。
+	 * 这是一种避免显式ResourceLoader处理的方便方法。
+	 *
 	 * @see #loadBeanDefinitions(String)
 	 * @see org.springframework.core.io.support.ResourcePatternResolver
 	 */
@@ -78,6 +88,8 @@ public interface BeanDefinitionReader {
 	/**
 	 * Return the BeanNameGenerator to use for anonymous beans
 	 * (without explicit bean name specified).
+	 *
+	 * 返回 Bean 的名称生成器，默认为 DefaultBeanNameGenerator
 	 */
 	BeanNameGenerator getBeanNameGenerator();
 

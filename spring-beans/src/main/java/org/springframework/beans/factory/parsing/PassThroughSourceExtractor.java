@@ -30,6 +30,9 @@ import org.springframework.lang.Nullable;
  * application since it is likely to keep too much metadata in memory
  * (unnecessarily).
  *
+ * 简单的SourceExtractor实现，只传递候选源元数据对象以进行附件。 使用此实现意味着工具将获得对工具提供的底层配置源元数据的原始访问。
+ * 此实现不应在生产应用程序中使用，因为它可能会在内存中保留太多元数据（不必要）。
+ *
  * @author Rob Harrop
  * @since 2.0
  */

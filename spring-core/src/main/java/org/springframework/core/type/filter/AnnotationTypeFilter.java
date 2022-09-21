@@ -36,6 +36,11 @@ import org.springframework.util.ClassUtils;
  * Similarly, the search for annotations on interfaces may optionally be enabled.
  * Consult the various constructors in this class for details.
  *
+ * 一个简单的TypeFilter，它将类与给定的注释相匹配，并检查继承的注释。
+ * 默认情况下，匹配逻辑反映了AnnotationUtils.getAnnotation（reflect.AnnotatedElement，Class）的逻辑，
+ * 支持单个级别的元注释存在或元存在的注释。元注释搜索被禁用。类似地，可以选择启用对接口上注释的搜索。
+ * 有关详细信息，请咨询此类中的各种构造函数。
+ *
  * @author Mark Fisher
  * @author Ramnivas Laddad
  * @author Juergen Hoeller
@@ -46,6 +51,9 @@ public class AnnotationTypeFilter extends AbstractTypeHierarchyTraversingFilter 
 
 	private final Class<? extends Annotation> annotationType;
 
+	/**
+	 * 是否考虑元注解（元注解就是注解其他注解的注解，如@Target,@Retention,@Documented,@Inherited）
+	 */
 	private final boolean considerMetaAnnotations;
 
 
@@ -96,7 +104,9 @@ public class AnnotationTypeFilter extends AbstractTypeHierarchyTraversingFilter 
 
 	@Override
 	protected boolean matchSelf(MetadataReader metadataReader) {
+		// 获得注解元数据
 		AnnotationMetadata metadata = metadataReader.getAnnotationMetadata();
+		// 存在指定注释或注释的完全限定类名
 		return metadata.hasAnnotation(this.annotationType.getName()) ||
 				(this.considerMetaAnnotations && metadata.hasMetaAnnotation(this.annotationType.getName()));
 	}
@@ -104,6 +114,7 @@ public class AnnotationTypeFilter extends AbstractTypeHierarchyTraversingFilter 
 	@Override
 	@Nullable
 	protected Boolean matchSuperClass(String superClassName) {
+		// 检查父类是否被目标注解声明
 		return hasAnnotation(superClassName);
 	}
 
@@ -115,17 +126,22 @@ public class AnnotationTypeFilter extends AbstractTypeHierarchyTraversingFilter 
 
 	@Nullable
 	protected Boolean hasAnnotation(String typeName) {
+		// 终止条件，避免死循环
 		if (Object.class.getName().equals(typeName)) {
 			return false;
 		}
 		else if (typeName.startsWith("java")) {
+			// java 包路径下
 			if (!this.annotationType.getName().startsWith("java")) {
+				// 当前注解得同样是 Java 包下才有匹配的可能
 				// Standard Java types do not have non-standard annotations on them ->
 				// skip any load attempt, in particular for Java language interfaces.
 				return false;
 			}
 			try {
+				// 加载父类
 				Class<?> clazz = ClassUtils.forName(typeName, getClass().getClassLoader());
+				// 检查注解是否存在
 				return ((this.considerMetaAnnotations ? AnnotationUtils.getAnnotation(clazz, this.annotationType) :
 						clazz.getAnnotation(this.annotationType)) != null);
 			}
@@ -133,6 +149,7 @@ public class AnnotationTypeFilter extends AbstractTypeHierarchyTraversingFilter 
 				// Class not regularly loadable - can't determine a match that way.
 			}
 		}
+		// 非java 标准类不考虑
 		return null;
 	}
 

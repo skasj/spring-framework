@@ -78,18 +78,23 @@ class ConditionEvaluator {
 	 * @return if the item should be skipped
 	 */
 	public boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) {
+		// 没有Condition注解，不需要跳过
 		if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) {
 			return false;
 		}
-
+		// 阶段未指定
 		if (phase == null) {
+			// 区分阶段
 			if (metadata instanceof AnnotationMetadata &&
 					ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) {
+				// configuration 阶段
 				return shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);
 			}
+			// bean 阶段
 			return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);
 		}
 
+		// 解析获取 conditions
 		List<Condition> conditions = new ArrayList<>();
 		for (String[] conditionClasses : getConditionClasses(metadata)) {
 			for (String conditionClass : conditionClasses) {
@@ -98,13 +103,17 @@ class ConditionEvaluator {
 			}
 		}
 
+		// condition 排序
 		AnnotationAwareOrderComparator.sort(conditions);
 
+		// 依次验证
 		for (Condition condition : conditions) {
 			ConfigurationPhase requiredPhase = null;
 			if (condition instanceof ConfigurationCondition) {
+				// 获取对应阶段
 				requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();
 			}
+			// 阶段不匹配，condition失效。没有设置阶段则默认全阶段
 			if ((requiredPhase == null || requiredPhase == phase) && !condition.matches(this.context, metadata)) {
 				return true;
 			}
@@ -146,10 +155,13 @@ class ConditionEvaluator {
 
 		public ConditionContextImpl(@Nullable BeanDefinitionRegistry registry,
 				@Nullable Environment environment, @Nullable ResourceLoader resourceLoader) {
-
+			// BeanDefinition 注册中心
 			this.registry = registry;
+			// Bean 工厂
 			this.beanFactory = deduceBeanFactory(registry);
+			// 环境
 			this.environment = (environment != null ? environment : deduceEnvironment(registry));
+			//
 			this.resourceLoader = (resourceLoader != null ? resourceLoader : deduceResourceLoader(registry));
 			this.classLoader = deduceClassLoader(resourceLoader, this.beanFactory);
 		}

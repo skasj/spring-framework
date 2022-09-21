@@ -55,6 +55,11 @@ public final class CandidateComponentsIndexLoader {
 	 * available for some libraries (or use cases) but couldn't be built for the whole
 	 * application. In this case, the application context fallbacks to a regular
 	 * classpath arrangement (i.e. as no index was present at all).
+	 *
+	 * 指示Spring忽略索引的系统属性，即始终从loadIndex（ClassLoader）返回null。
+	 * 默认值为“false”，允许定期使用索引。
+	 * 当索引对某些库（或用例）部分可用，但无法为整个应用程序构建时，将此标志切换为true可以满足一种极端情况。
+	 * 在这种情况下，应用程序上下文回退到常规的类路径安排（即根本不存在索引）
 	 */
 	public static final String IGNORE_INDEX = "spring.index.ignore";
 
@@ -63,6 +68,7 @@ public final class CandidateComponentsIndexLoader {
 
 	private static final Log logger = LogFactory.getLog(CandidateComponentsIndexLoader.class);
 
+	/** CandidateComponentsIndex 的缓存，与 ClassLoader 对应 */
 	private static final ConcurrentMap<ClassLoader, CandidateComponentsIndex> cache =
 			new ConcurrentReferenceHashMap<>();
 
@@ -79,37 +85,48 @@ public final class CandidateComponentsIndexLoader {
 	 * @return the index to use or {@code null} if no index was found
 	 * @throws IllegalArgumentException if any module index cannot
 	 * be loaded or if an error occurs while creating {@link CandidateComponentsIndex}
+	 *
+	 * 获取所有 `META-INF/spring.components` 文件中的内容
 	 */
 	@Nullable
 	public static CandidateComponentsIndex loadIndex(@Nullable ClassLoader classLoader) {
 		ClassLoader classLoaderToUse = classLoader;
 		if (classLoaderToUse == null) {
+			// 默认使用当前类的classLoad
 			classLoaderToUse = CandidateComponentsIndexLoader.class.getClassLoader();
 		}
+		// 获取所有 `META-INF/spring.components` 文件中的内容
 		return cache.computeIfAbsent(classLoaderToUse, CandidateComponentsIndexLoader::doLoadIndex);
 	}
 
 	@Nullable
 	private static CandidateComponentsIndex doLoadIndex(ClassLoader classLoader) {
 		if (shouldIgnoreIndex) {
+			// 关闭 Index功能
 			return null;
 		}
 
 		try {
+			// 获取所有的 `META-INF/spring.components` 文件
 			Enumeration<URL> urls = classLoader.getResources(COMPONENTS_RESOURCE_LOCATION);
 			if (!urls.hasMoreElements()) {
 				return null;
 			}
+			// 加载所有 `META-INF/spring.components` 文件的内容
 			List<Properties> result = new ArrayList<>();
 			while (urls.hasMoreElements()) {
 				URL url = urls.nextElement();
+				// kv 形式加载所有文件
 				Properties properties = PropertiesLoaderUtils.loadProperties(new UrlResource(url));
 				result.add(properties);
 			}
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + result.size() + "] index(es)");
 			}
+			// 总共配置多少个 component 组件
 			int totalCount = result.stream().mapToInt(Properties::size).sum();
+			// 如果配置了 component 组件，则封装成 CandidateComponentsIndex 对象并返回
+			// 文件中的kv互换
 			return (totalCount > 0 ? new CandidateComponentsIndex(result) : null);
 		}
 		catch (IOException ex) {

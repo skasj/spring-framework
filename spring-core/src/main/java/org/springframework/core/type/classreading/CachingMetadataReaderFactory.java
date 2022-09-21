@@ -74,10 +74,12 @@ public class CachingMetadataReaderFactory extends SimpleMetadataReaderFactory {
 	public CachingMetadataReaderFactory(@Nullable ResourceLoader resourceLoader) {
 		super(resourceLoader);
 		if (resourceLoader instanceof DefaultResourceLoader) {
+			// 缓存
 			this.metadataReaderCache =
 					((DefaultResourceLoader) resourceLoader).getResourceCache(MetadataReader.class);
 		}
 		else {
+			// 设置缓存限制
 			setCacheLimit(DEFAULT_CACHE_LIMIT);
 		}
 	}
@@ -88,6 +90,10 @@ public class CachingMetadataReaderFactory extends SimpleMetadataReaderFactory {
 	 * <p>Default is 256 for a local cache, whereas a shared cache is
 	 * typically unbounded. This method enforces a local resource cache,
 	 * even if the {@link ResourceLoader} supports a shared resource cache.
+	 *
+	 * 指定MetadataReader缓存的最大条目数。
+	 * 本地缓存的默认值为256，而共享缓存通常是无边界的。
+	 * 此方法强制使用本地资源缓存，即使ResourceLoader支持共享资源缓存。
 	 */
 	public void setCacheLimit(int cacheLimit) {
 		if (cacheLimit <= 0) {

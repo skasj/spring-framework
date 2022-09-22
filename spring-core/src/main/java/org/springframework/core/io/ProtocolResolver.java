@@ -25,6 +25,10 @@ import org.springframework.lang.Nullable;
  * custom protocols to be handled without subclassing the loader
  * implementation (or application context implementation).
  *
+ *
+ * @FunctionalInterface 代表
+ * 接口中只有一个抽象方法（可以包含多个默认方法或多个 static 方法）
+ *
  * @author Juergen Hoeller
  * @since 4.3
  * @see DefaultResourceLoader#addProtocolResolver

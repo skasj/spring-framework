@@ -98,6 +98,9 @@ public interface Resource extends InputStreamSource {
 
 	/**
 	 * Return a URL handle for this resource.
+	 *
+	 * 返回资源的 URL 的句柄
+	 *
 	 * @throws IOException if the resource cannot be resolved as URL,
 	 * i.e. if the resource is not available as descriptor
 	 */
@@ -105,6 +108,9 @@ public interface Resource extends InputStreamSource {
 
 	/**
 	 * Return a URI handle for this resource.
+	 *
+	 * 返回资源的 URI 的句柄
+	 *
 	 * @throws IOException if the resource cannot be resolved as URI,
 	 * i.e. if the resource is not available as descriptor
 	 * @since 2.5
@@ -112,6 +118,9 @@ public interface Resource extends InputStreamSource {
 	URI getURI() throws IOException;
 
 	/**
+	 *
+	 * 返回资源的 File 的句柄
+	 *
 	 * Return a File handle for this resource.
 	 * @throws java.io.FileNotFoundException if the resource cannot be resolved as
 	 * absolute file path, i.e. if the resource is not available in a file system
@@ -121,6 +130,8 @@ public interface Resource extends InputStreamSource {
 	File getFile() throws IOException;
 
 	/**
+	 * 返回 ReadableByteChannel
+	 *
 	 * Return a {@link ReadableByteChannel}.
 	 * <p>It is expected that each call creates a <i>fresh</i> channel.
 	 * <p>The default implementation returns {@link Channels#newChannel(InputStream)}
@@ -136,6 +147,8 @@ public interface Resource extends InputStreamSource {
 	}
 
 	/**
+	 * 资源内容的长度
+	 *
 	 * Determine the content length for this resource.
 	 * @throws IOException if the resource cannot be resolved
 	 * (in the file system or as some other known physical resource type)
@@ -143,6 +156,8 @@ public interface Resource extends InputStreamSource {
 	long contentLength() throws IOException;
 
 	/**
+	 * 资源最后的修改时间
+	 *
 	 * Determine the last-modified timestamp for this resource.
 	 * @throws IOException if the resource cannot be resolved
 	 * (in the file system or as some other known physical resource type)
@@ -150,6 +165,8 @@ public interface Resource extends InputStreamSource {
 	long lastModified() throws IOException;
 
 	/**
+	 * 根据资源的相对路径创建新资源
+	 *
 	 * Create a resource relative to this resource.
 	 * @param relativePath the relative path (relative to this resource)
 	 * @return the resource handle for the relative resource
@@ -158,6 +175,8 @@ public interface Resource extends InputStreamSource {
 	Resource createRelative(String relativePath) throws IOException;
 
 	/**
+	 * 资源的文件名
+	 *
 	 * Determine a filename for this resource, i.e. typically the last
 	 * part of the path: for example, "myfile.txt".
 	 * <p>Returns {@code null} if this type of resource does not
@@ -167,6 +186,8 @@ public interface Resource extends InputStreamSource {
 	String getFilename();
 
 	/**
+	 * 资源的描述
+	 *
 	 * Return a description for this resource,
 	 * to be used for error output when working with the resource.
 	 * <p>Implementations are also encouraged to return this value

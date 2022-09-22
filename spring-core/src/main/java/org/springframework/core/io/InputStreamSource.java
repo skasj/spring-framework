@@ -31,6 +31,11 @@ import java.io.InputStream;
  * This makes this interface useful as an abstract content source for mail
  * attachments, for example.
  *
+ * 作为InputStream源的对象的简单接口。 这是Spring更广泛的Resource接口的基础接口。
+ * 对于一次性流，InputStreamResource可以用于任何给定的InputStream。
+ * Spring的ByteArrayResource或任何基于文件的Resource实现都可以用作具体实例，允许多次读取底层内容流。
+ * 例如，这使得该接口作为邮件附件的抽象内容源非常有用。
+ *
  * @author Juergen Hoeller
  * @since 20.01.2004
  * @see java.io.InputStream

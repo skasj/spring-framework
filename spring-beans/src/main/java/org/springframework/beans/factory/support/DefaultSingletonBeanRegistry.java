@@ -173,25 +173,36 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * <p>Checks already instantiated singletons and also allows for an early
 	 * reference to a currently created singleton (resolving a circular reference).
 	 * @param beanName the name of the bean to look for
-	 * @param allowEarlyReference whether early references should be created or not
+	 * @param allowEarlyReference whether early references should be created or not  // 是否应创建早期引用
 	 * @return the registered singleton object, or {@code null} if none found
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+		// <1> **【一级 Map】**从单例缓存 `singletonObjects` 中获取 beanName 对应的 Bean
 		Object singletonObject = this.singletonObjects.get(beanName);
+		// <2> 如果**一级 Map**中不存在，且当前 beanName 正在创建
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			// <2.1> 对 `singletonObjects` 加锁
 			synchronized (this.singletonObjects) {
+				// <2.2> **【二级 Map】**从 `earlySingletonObjects` 集合中获取，里面会保存从 **三级 Map** 获取到的正在初始化的 Bean
 				singletonObject = this.earlySingletonObjects.get(beanName);
+				// <2.3> 如果**二级 Map** 中不存在，且允许提前创建
 				if (singletonObject == null && allowEarlyReference) {
+					// <2.3.1> **【三级 Map】**从 `singletonFactories` 中获取对应的 ObjectFactory 实现类
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
+					// 如果从**三级 Map** 中存在对应的对象，则进行下面的处理
 					if (singletonFactory != null) {
+						// <2.3.2> 调用 ObjectFactory#getOject() 方法，获取目标 Bean 对象（早期半成品）
 						singletonObject = singletonFactory.getObject();
+						// <2.3.3> 将目标对象放入**二级 Map**
 						this.earlySingletonObjects.put(beanName, singletonObject);
+						// <2.3.4> 从**三级 Map**移除 `beanName`
 						this.singletonFactories.remove(beanName);
 					}
 				}
 			}
 		}
+		// <3> 返回从缓存中获取的对象
 		return singletonObject;
 	}
 

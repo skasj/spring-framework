@@ -80,10 +80,12 @@ public abstract class BeanFactoryUtils {
 	 */
 	public static String transformedBeanName(String name) {
 		Assert.notNull(name, "'name' must not be null");
+		// 没有带有 FactoryBean 前缀符号 &
 		if (!name.startsWith(BeanFactory.FACTORY_BEAN_PREFIX)) {
 			return name;
 		}
 		return transformedBeanNameCache.computeIfAbsent(name, beanName -> {
+			// 去除所有的前缀符号 &, 然后加入缓存
 			do {
 				beanName = beanName.substring(BeanFactory.FACTORY_BEAN_PREFIX.length());
 			}

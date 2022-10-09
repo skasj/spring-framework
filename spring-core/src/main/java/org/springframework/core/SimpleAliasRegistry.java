@@ -215,12 +215,15 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	 * @return the transformed name
 	 */
 	public String canonicalName(String name) {
+		// 默认值
 		String canonicalName = name;
+		// 处理别名
 		// Handle aliasing...
 		String resolvedName;
 		do {
 			resolvedName = this.aliasMap.get(canonicalName);
 			if (resolvedName != null) {
+				// 如果是别名，就替换为真实的beanName
 				canonicalName = resolvedName;
 			}
 		}

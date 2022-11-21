@@ -126,8 +126,9 @@ public class AnnotationTypeFilter extends AbstractTypeHierarchyTraversingFilter 
 
 	@Nullable
 	protected Boolean hasAnnotation(String typeName) {
-		// 终止条件，避免死循环
+		// 避免空指针，Object.class 没有父类
 		if (Object.class.getName().equals(typeName)) {
+
 			return false;
 		}
 		else if (typeName.startsWith("java")) {

@@ -64,7 +64,7 @@ public abstract class AbstractTypeHierarchyTraversingFilter implements TypeFilte
 			return true;
 		}
 		ClassMetadata metadata = metadataReader.getClassMetadata();
-		// 类名匹配，默认失败，除非子类重写
+		// 子类类名匹配
 		if (matchClassName(metadata.getClassName())) {
 			return true;
 		}

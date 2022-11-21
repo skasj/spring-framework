@@ -18,6 +18,7 @@ package org.springframework.context.support;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 

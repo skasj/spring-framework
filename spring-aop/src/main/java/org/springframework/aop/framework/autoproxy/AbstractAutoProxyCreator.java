@@ -244,10 +244,13 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
 		Object cacheKey = getCacheKey(beanClass, beanName);
 
+		// 如果没有 beanName 或者没有自定义生成 TargetSource
 		if (!StringUtils.hasLength(beanName) || !this.targetSourcedBeans.contains(beanName)) {
+			// 已创建代理对象（或不需要创建），则直接返回 null，进行后续的 Bean 加载过程
 			if (this.advisedBeans.containsKey(cacheKey)) {
 				return null;
 			}
+			// 不需要创建代理对象，则直接返回 null，进行后续的 Bean 加载过程
 			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) {
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);
 				return null;
@@ -257,12 +260,16 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		// Create proxy here if we have a custom TargetSource.
 		// Suppresses unnecessary default instantiation of the target bean:
 		// The TargetSource will handle target instances in a custom fashion.
+		// 通过自定义 TargetSourceCreator 创建自定义 TargetSource 对象(如果想要获得最原始的目标对象而不是代理类，可以通过这种方式)
+		// 默认没有 TargetSourceCreator，所以这里通常都是返回 null
 		TargetSource targetSource = getCustomTargetSource(beanClass, beanName);
 		if (targetSource != null) {
 			if (StringUtils.hasLength(beanName)) {
 				this.targetSourcedBeans.add(beanName);
 			}
+			// 获取能够应用到当前 Bean 的所有 Advisor（已根据 @Order 排序）
 			Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(beanClass, beanName, targetSource);
+			// 创建代理对象，JDK 动态代理或者 CGLIB 动态代理
 			Object proxy = createProxy(beanClass, beanName, specificInterceptors, targetSource);
 			this.proxyTypes.put(cacheKey, proxy.getClass());
 			return proxy;
@@ -325,6 +332,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
+	 * 为这个 Bean 创建代理对象（如果有必要的话）
 	 * Wrap the given bean if necessary, i.e. if it is eligible for being proxied.
 	 * @param bean the raw bean instance
 	 * @param beanName the name of the bean
